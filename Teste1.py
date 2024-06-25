@@ -74,24 +74,29 @@ def confirmação(image_path, confidence=0.9):
             print("Imagem não encontrada após 3 tentativas. Saindo da função.")
             break
 
-def verificar_campo(image_path, confidence=0.9):
+def verificar_campo(image_path,image_path2, confidence=0.9):
     current_dir = os.path.dirname(__file__)  # Diretório atual do script
     caminho_imagem = caminho + r'\IMAGENS'
     image_path = os.path.join(current_dir, caminho_imagem, image_path) 
+    image_path2 = os.path.join(current_dir, caminho_imagem, image_path2) 
     while True:
         try:
             position = pyautogui.locateOnScreen(image_path, confidence=confidence)
             if position:
+                print("Campo encontrado.")
+                break
+        except Exception as e:
+            print("Imagem não encontrada na tela. Aguardando...")
+        try:
+            position2 = pyautogui.locateOnScreen(image_path2, confidence=confidence)
+            if position2:
                 print("Campo encontrado.")
                 break
         except Exception as e:
             print("Imagem não encontrada na tela. Aguardando...")
         pyautogui.sleep(1)
 
-def check_caps_lock():
-    return ctypes.windll.user32.GetKeyState(0x14) & 0xffff != 0
-
-def status_manifesto(image_path, confidence=0.9):
+def verificar_campo_cancelamento(image_path, confidence=0.9):
     current_dir = os.path.dirname(__file__)  # Diretório atual do script
     caminho_imagem = caminho + r'\IMAGENS'
     image_path = os.path.join(current_dir, caminho_imagem, image_path) 
@@ -99,18 +104,42 @@ def status_manifesto(image_path, confidence=0.9):
         try:
             position = pyautogui.locateOnScreen(image_path, confidence=confidence)
             if position:
-                print("Campo encontrado.")
+                print("Campo de cancelamento encontrado.")
+                break
+        except Exception as e:
+            print("Campo de cancelamento nao encontrado. Aguardando...")
+        pyautogui.sleep(1)
+
+def check_caps_lock():
+    return ctypes.windll.user32.GetKeyState(0x14) & 0xffff != 0
+
+def status_manifesto(image_path,image_path3, confidence=0.9):
+    current_dir = os.path.dirname(__file__)  # Diretório atual do script
+    caminho_imagem = caminho + r'\IMAGENS'
+    image_path = os.path.join(current_dir, caminho_imagem, image_path) 
+    image_path3 = os.path.join(current_dir, caminho_imagem, image_path3)
+    while True:
+        try:
+            position = pyautogui.locateOnScreen(image_path, confidence=confidence)
+            if position:
+                print("Campo encontrado cadastrado.")
                 break
         except Exception as e:
             print("Imagem não encontrada na tela. Aguardando...")
-
+        try:
+            position3 = pyautogui.locateOnScreen(image_path3, confidence=confidence)
+            if position3:
+                print("Campo encontrado emitido.")
+                break
+        except Exception as e:
+            print("Imagem não encontrada na tela. Aguardando...")
         image_name2 = 'status_baixado.png'
         image_path2 = os.path.join(current_dir, caminho_imagem, image_name2)
         try:
             print("Tentando achar a segunda imagem.")
             position2 = pyautogui.locateOnScreen(image_path2, confidence=confidence)
             if position2:
-                print("Campo encontrado.")
+                print("Campo de baixado encontrado.")
                 click_image('botao_frota.png')
                 pyautogui.press("alt")
                 pyautogui.press("alt")
@@ -123,7 +152,8 @@ def status_manifesto(image_path, confidence=0.9):
                 pyautogui.press("enter")
                 pyautogui.sleep(2)
                 click_image('incluir.png')
-                verificar_campo('status_tela_cancelamento.png')
+                pyautogui.sleep(2)
+                verificar_campo_cancelamento('status_tela_cancelamento.png')
                 click_image('CTRC.png')
                 for i in range(10): 
                     pyautogui.press("up")
@@ -171,6 +201,7 @@ def status_manifesto(image_path, confidence=0.9):
                     pyautogui.press("backspace")
                 pyautogui.write(str(manifesto))
                 pyautogui.press("tab")
+                status_manifesto('status_cadastrado.png','status_emitido.png')
                 break
         except Exception as e:
             print("Imagem não encontrada na tela. Aguardando...")
@@ -233,7 +264,7 @@ Planilha_km = pd.read_excel("BASE_KM.xlsx")
 
 numero_linhas = len(Planilha_km)
 #print(numero_linhas)
-
+linha_especifica = 1
 for i, linha in enumerate(Planilha_km.index):
     filial = Planilha_km.loc[linha, "FILIAL"]
     serie = Planilha_km.loc[linha, "SERIE"]
@@ -244,6 +275,7 @@ for i, linha in enumerate(Planilha_km.index):
     agora_formatado = agora.strftime("%d/%m/%Y %H:%M")
     um_minuto_atras_formatado = um_minuto_atras.strftime("%d/%m/%Y%H:%M")
     falta = numero_linhas - i
+    linha_especifica += 1
     print(f'filial:{filial} serie:{serie} manifesto:{manifesto} km:{km} falta:{falta}')
 
     click_image('incluir.png')
@@ -261,10 +293,12 @@ for i, linha in enumerate(Planilha_km.index):
         pyautogui.press("backspace")
     pyautogui.write(str(manifesto))
     pyautogui.press("tab")
-    status_manifesto('status_cadastrado.png')
-    click_image('campo_km.png')
+    status_manifesto('status_cadastrado.png','status_emitido.png')
+    click_info_manifesto('campo_km.png')
     for i in range(10): 
         pyautogui.press("backspace")
+    for i in range(10): 
+        pyautogui.press("del")
     pyautogui.write(str(km))
     click_image('salvar_km.png')
     click_image('ok.png')
@@ -287,10 +321,21 @@ for i, linha in enumerate(Planilha_km.index):
     pyautogui.write(str(manifesto))
     click_image('botao_encerrar.png')
     pyautogui.sleep(4)
-    #verificar_campo('encerrado.png')
+    verificar_campo('encerrado.png','manifesto_ja_baixado.png')
     click_image('fechar_tela_encerramento.png')
     pyautogui.sleep(2)
 
+    caminho_do_arquivo = 'BASE_KM.xlsx'
+    nome_da_aba = 'Planilha1'
+    wb = load_workbook(caminho_do_arquivo)
+    ws = wb[nome_da_aba]
+    coluna_ost = 'E'  
+    if linha > ws.max_row:
+        ws[coluna_ost + str(linha_especifica)] = 'MANIFESTO BAIXADO'
+    else:
+        ws[coluna_ost + str(linha_especifica)] = 'MANIFESTO BAIXADO'
+    wb.save(caminho_do_arquivo)
+    wb.close()
 click_image('voltar.png')
 # alt_press("f4")
 # click_image('fechar_rodopar.png')
