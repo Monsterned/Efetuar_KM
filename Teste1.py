@@ -30,6 +30,90 @@ def click_image(image_path, confidence=0.9):
             print("Imagem não encontrada na tela. Aguardando...")
         pyautogui.sleep(1)
 
+def tela_baixa(image_path, confidence=0.9):
+    current_dir = os.path.dirname(__file__)  # Diretório atual do script
+    caminho_imagem = caminho + r'\IMAGENS'
+    image_path = os.path.join(current_dir, caminho_imagem, image_path) 
+    while True:
+        try:
+            position = pyautogui.locateOnScreen(image_path, confidence=confidence)
+            if position:
+                center_x = position.left + position.width // 2
+                center_y = position.top + position.height // 2
+                pyautogui.click(center_x, center_y)
+                print("Imagem foi encontrada na tela.")
+                break
+        except Exception as e:
+            click('sim_cancelamento.png')
+            pyautogui.sleep(1)
+            click('baixar_manifesto.png')
+            print("Imagem não encontrada na tela. Aguardando...")
+        pyautogui.sleep(1)
+
+def sim_reculculo(image_path,image_path2, confidence=0.9):
+    current_dir = os.path.dirname(__file__)  # Diretório atual do script
+    caminho_imagem = caminho + r'\IMAGENS'
+    image_path = os.path.join(current_dir, caminho_imagem, image_path) 
+    image_path2 = os.path.join(current_dir, caminho_imagem, image_path2)
+    while True:
+        try:
+            position = pyautogui.locateOnScreen(image_path, confidence=confidence)
+            if position:
+                center_x = position.left + position.width // 2
+                center_y = position.top + position.height // 2
+                pyautogui.click(center_x, center_y)
+                print("Imagem foi encontrada na tela.")
+                break
+        except Exception as e:
+            print("Imagem não encontrada na tela. Aguardando...")
+        try:
+            position2 = pyautogui.locateOnScreen(image_path2, confidence=confidence)
+            if position2:
+                center_x = position2.left + position2.width // 2
+                center_y = position2.top + position2.height // 2
+                pyautogui.click(center_x, center_y)
+                print("Imagem foi encontrada na tela.")
+                break
+        except Exception as e:
+            print("Imagem não encontrada na tela. Aguardando...")
+        pyautogui.sleep(1)
+
+def click(image_path, confidence=0.9):
+    current_dir = os.path.dirname(__file__)  # Diretório atual do script
+    caminho_imagem = caminho + r'\IMAGENS'
+    image_path = os.path.join(current_dir, caminho_imagem, image_path) 
+    try:
+        position = pyautogui.locateOnScreen(image_path, confidence=confidence)
+        if position:
+            center_x = position.left + position.width // 2
+            center_y = position.top + position.height // 2
+            pyautogui.click(center_x, center_y)
+            print("Imagem foi encontrada na tela.")
+            
+    except Exception as e:
+        print("Imagem não encontrada na tela. Aguardando...")
+    pyautogui.sleep(1)
+
+def click_encerrar(image_path, confidence=0.9):
+    current_dir = os.path.dirname(__file__)  # Diretório atual do script
+    caminho_imagem = caminho + r'\IMAGENS'
+    image_path = os.path.join(current_dir, caminho_imagem, image_path) 
+    while True:
+        try:
+            position = pyautogui.locateOnScreen(image_path, confidence=confidence)
+            if position:
+                center_x = position.left + position.width // 2
+                center_y = position.top + position.height // 2
+                pyautogui.click(center_x, center_y)
+                print("Imagem foi encontrada na tela.")
+                break
+        except Exception as e:
+            click('ok.png')
+            pyautogui.sleep(1)
+            click('encerrar_sefaz.png')
+            print("Imagem não encontrada na tela. Aguardando...")
+        pyautogui.sleep(1)
+
 def verificação_km(image_path,image_path2, confidence=0.9):
     current_dir = os.path.dirname(__file__)  # Diretório atual do script
     caminho_imagem = caminho + r'\IMAGENS'
@@ -117,11 +201,12 @@ def confirmação(image_path, confidence=0.9):
             print("Imagem não encontrada após 3 tentativas. Saindo da função.")
             break
 
-def verificar_campo(image_path,image_path2, confidence=0.9):
+def verificar_campo(image_path,image_path2,image_path3, confidence=0.9):
     current_dir = os.path.dirname(__file__)  # Diretório atual do script
     caminho_imagem = caminho + r'\IMAGENS'
     image_path = os.path.join(current_dir, caminho_imagem, image_path) 
     image_path2 = os.path.join(current_dir, caminho_imagem, image_path2) 
+    image_path3 = os.path.join(current_dir, caminho_imagem, image_path3)
     while True:
         try:
             position = pyautogui.locateOnScreen(image_path, confidence=confidence)
@@ -133,6 +218,13 @@ def verificar_campo(image_path,image_path2, confidence=0.9):
         try:
             position2 = pyautogui.locateOnScreen(image_path2, confidence=confidence)
             if position2:
+                print("Campo encontrado.")
+                break
+        except Exception as e:
+            print("Imagem não encontrada na tela. Aguardando...")
+        try:
+            position3 = pyautogui.locateOnScreen(image_path3, confidence=confidence)
+            if position3:
                 print("Campo encontrado.")
                 break
         except Exception as e:
@@ -216,6 +308,11 @@ def status_manifesto(image_path,image_path3, confidence=0.9):
                     pyautogui.press("down")
                 pyautogui.press("enter")
                 pyautogui.sleep(2)
+                pyautogui.press('enter')
+                pyautogui.sleep(1)
+                click_image('janela.png')
+                click_image('tela_cancelamento.png')
+                click_image('confirmacao_tela_cancelamento.png')
                 click_image('incluir.png')
                 pyautogui.sleep(2)
                 verificar_campo_cancelamento('status_tela_cancelamento.png')
@@ -244,7 +341,7 @@ def status_manifesto(image_path,image_path3, confidence=0.9):
                 pyautogui.press("1")
                 pyautogui.sleep(1)
                 pyautogui.press("tab")
-                pyautogui.write("correção de km")
+                pyautogui.write("correcao de km")
                 pyautogui.sleep(1)
                 click_image('salvar_cancelamento.png')
                 click_image('sim_cancelamento.png')
@@ -343,7 +440,9 @@ numero_linhas = len(Planilha_km)
 linha_especifica = 1
 for i, linha in enumerate(Planilha_km.index):
     filial = Planilha_km.loc[linha, "FILIAL"]
+    filial = int(filial)
     serie = Planilha_km.loc[linha, "SERIE"]
+    serie = int(serie)
     manifesto = Planilha_km.loc[linha, "MANIFESTO"]
     km = Planilha_km.loc[linha, "KM"]
     km = int(km)
@@ -378,6 +477,9 @@ for i, linha in enumerate(Planilha_km.index):
     pyautogui.sleep(1)
     pyautogui.press("tab")
     aviso_ativo = status_manifesto('status_cadastrado.png','status_emitido.png')
+    pyautogui.sleep(1)
+    for i in range(2):
+        pyautogui.press("enter")
     click_info_manifesto('campo_km.png')
     for i in range(10): 
         pyautogui.press("backspace")
@@ -389,10 +491,10 @@ for i, linha in enumerate(Planilha_km.index):
     click_image('ok.png')
     pyautogui.sleep(2)
     click_image('botao_recalculo.png')
-    click_image('sim_recalculo.png')
+    sim_reculculo('sim_recalculo.png','ok.png')
     pyautogui.sleep(3)
     click_image('baixar_manifesto.png')
-    click_image('tela_baixar_data.png')
+    tela_baixa('tela_baixar_data.png')
     pyautogui.write(str(um_minuto_atras_formatado))
     pyautogui.sleep(1)
     click_image('ok2.png')
@@ -401,17 +503,18 @@ for i, linha in enumerate(Planilha_km.index):
     pyautogui.sleep(1)
     click_image('nao.png')
     pyautogui.sleep(2)
+
+
     if aviso_ativo:
         click_image('ok.png')
         pyautogui.sleep(1)
-        click_image('ok.png')
-        pyautogui.sleep(1)
     click_image('encerrar_sefaz.png')
-    click_image('campo_encerramento_numero_manifesto.png')
+    click_encerrar('campo_encerramento_numero_manifesto.png')
+    pyautogui.press('enter')
     pyautogui.write(str(manifesto))
     click_image('botao_encerrar.png')
     pyautogui.sleep(4)
-    verificar_campo('encerrado.png','manifesto_ja_baixado.png')
+    verificar_campo('encerrado.png','manifesto_ja_baixado.png','encerrado_secretaria.png')
     click_image('fechar_tela_encerramento.png')
     pyautogui.sleep(2)
 
