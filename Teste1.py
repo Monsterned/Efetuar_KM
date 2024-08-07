@@ -30,6 +30,34 @@ def click_image(image_path, confidence=0.9):
             print("Imagem não encontrada na tela. Aguardando...")
         pyautogui.sleep(1)
 
+def campo_data_baixa(image_path,image_path2, confidence=0.9):
+    current_dir = os.path.dirname(__file__)  # Diretório atual do script
+    caminho_imagem = caminho + r'\IMAGENS'
+    image_path = os.path.join(current_dir, caminho_imagem, image_path) 
+    image_path2 = os.path.join(current_dir, caminho_imagem, image_path2) 
+    while True:
+        try:
+            position = pyautogui.locateOnScreen(image_path, confidence=confidence)
+            if position:
+                center_x = position.left + position.width // 2
+                center_y = position.top + position.height // 2
+                pyautogui.click(center_x, center_y)
+                print("Imagem foi encontrada na tela.")
+                break
+        except Exception as e:
+            print("Imagem não encontrada na tela. Aguardando...")
+        try:
+            position2 = pyautogui.locateOnScreen(image_path2, confidence=confidence)
+            if position2:
+                center_x = position2.left + position2.width // 2
+                center_y = position2.top + position2.height // 2
+                pyautogui.click(center_x, center_y)
+                print("Imagem foi encontrada na tela.")
+                break
+        except Exception as e:
+            print("Imagem não encontrada na tela. Aguardando...")
+        pyautogui.sleep(1)
+
 def tela_baixa(image_path, confidence=0.9):
     current_dir = os.path.dirname(__file__)  # Diretório atual do script
     caminho_imagem = caminho + r'\IMAGENS'
@@ -44,11 +72,26 @@ def tela_baixa(image_path, confidence=0.9):
                 print("Imagem foi encontrada na tela.")
                 break
         except Exception as e:
-            click('sim_cancelamento.png')
-            pyautogui.sleep(1)
-            click('baixar_manifesto.png')
+            clique_baixa('sim_cancelamento.png')
+            clique_baixa('yes.png')           
             print("Imagem não encontrada na tela. Aguardando...")
         pyautogui.sleep(1)
+
+def clique_baixa(image_path, confidence=0.9):
+    current_dir = os.path.dirname(__file__)  # Diretório atual do script
+    caminho_imagem = caminho + r'\IMAGENS'
+    image_path = os.path.join(current_dir, caminho_imagem, image_path) 
+    try:
+        position = pyautogui.locateOnScreen(image_path, confidence=confidence)
+        if position:
+            center_x = position.left + position.width // 2
+            center_y = position.top + position.height // 2
+            pyautogui.click(center_x, center_y)
+            click('baixar_manifesto.png')
+            print("Clicou novamente na baixa.")
+    except Exception as e:
+        print("Imagem não encontrada na tela. Aguardando...")
+    pyautogui.sleep(1)
 
 def sim_reculculo(image_path,image_path2, confidence=0.9):
     current_dir = os.path.dirname(__file__)  # Diretório atual do script
@@ -89,7 +132,6 @@ def click(image_path, confidence=0.9):
             center_y = position.top + position.height // 2
             pyautogui.click(center_x, center_y)
             print("Imagem foi encontrada na tela.")
-            
     except Exception as e:
         print("Imagem não encontrada na tela. Aguardando...")
     pyautogui.sleep(1)
@@ -108,11 +150,27 @@ def click_encerrar(image_path, confidence=0.9):
                 print("Imagem foi encontrada na tela.")
                 break
         except Exception as e:
-            click('ok.png')
+            clicar_encerrar('ok.png')
+            clicar_encerrar('yes.png')
             pyautogui.sleep(1)
-            click('encerrar_sefaz.png')
             print("Imagem não encontrada na tela. Aguardando...")
         pyautogui.sleep(1)
+
+def clicar_encerrar(image_path, confidence=0.9):
+    current_dir = os.path.dirname(__file__)  # Diretório atual do script
+    caminho_imagem = caminho + r'\IMAGENS'
+    image_path = os.path.join(current_dir, caminho_imagem, image_path) 
+    try:
+        position = pyautogui.locateOnScreen(image_path, confidence=confidence)
+        if position:
+            center_x = position.left + position.width // 2
+            center_y = position.top + position.height // 2
+            pyautogui.click(center_x, center_y)
+            click('encerrar_sefaz.png')
+            print("Imagem foi encontrada na tela.")
+    except Exception as e:
+        print("Imagem não encontrada na tela. Aguardando...")
+    pyautogui.sleep(1)
 
 def verificação_km(image_path,image_path2, confidence=0.9):
     current_dir = os.path.dirname(__file__)  # Diretório atual do script
@@ -308,7 +366,8 @@ def status_manifesto(image_path,image_path3, confidence=0.9):
                     pyautogui.press("down")
                 pyautogui.press("enter")
                 pyautogui.sleep(2)
-                pyautogui.press('enter')
+                for i in range(2):
+                    pyautogui.press("enter")
                 pyautogui.sleep(1)
                 click_image('janela.png')
                 click_image('tela_cancelamento.png')
@@ -476,6 +535,8 @@ for i, linha in enumerate(Planilha_km.index):
     pyautogui.write(str(manifesto))
     pyautogui.sleep(1)
     pyautogui.press("tab")
+    for i in range(2):
+        pyautogui.press("enter")
     aviso_ativo = status_manifesto('status_cadastrado.png','status_emitido.png')
     pyautogui.sleep(1)
     for i in range(2):
@@ -495,6 +556,10 @@ for i, linha in enumerate(Planilha_km.index):
     pyautogui.sleep(3)
     click_image('baixar_manifesto.png')
     tela_baixa('tela_baixar_data.png')
+    campo_data_baixa('campo_data_baixa.png','campo_data_baixa2.png')
+    pyautogui.sleep(1)
+    for i in range(16):
+        pyautogui.press("backspace")
     pyautogui.write(str(um_minuto_atras_formatado))
     pyautogui.sleep(1)
     click_image('ok2.png')
