@@ -323,18 +323,21 @@ def aviso_vencimento(image_path, confidence=0.9):
 
     return aviso_ativo
 
-def status_manifesto(image_path,image_path3, confidence=0.9):
+def status_manifesto(image_path,image_path3,image_path4, confidence=0.9):
     current_dir = os.path.dirname(__file__)  # Diretório atual do script
     caminho_imagem = caminho + r'\IMAGENS'
     image_path = os.path.join(current_dir, caminho_imagem, image_path) 
     image_path3 = os.path.join(current_dir, caminho_imagem, image_path3)
+    image_path4 = os.path.join(current_dir, caminho_imagem, image_path4)
+    nao_encontrado = False
+    aviso_ativo = False
     while True:
         try:
             position = pyautogui.locateOnScreen(image_path, confidence=confidence)
             if position:
                 print("Campo encontrado cadastrado.")
                 aviso_ativo = aviso_vencimento('curso_vencido.png')
-                return aviso_ativo
+                return aviso_ativo,nao_encontrado
                 break
         except Exception as e:
             print("Imagem não encontrada na tela. Aguardando...")
@@ -343,12 +346,32 @@ def status_manifesto(image_path,image_path3, confidence=0.9):
             if position3:
                 print("Campo encontrado emitido.")
                 aviso_ativo = aviso_vencimento('curso_vencido.png')
-                return aviso_ativo
+                return aviso_ativo,nao_encontrado
                 break
         except Exception as e:
             print("Imagem não encontrada na tela. Aguardando...")
         image_name2 = 'status_baixado.png'
         image_path2 = os.path.join(current_dir, caminho_imagem, image_name2)
+        try:
+            position4 = pyautogui.locateOnScreen(image_path4, confidence=confidence)
+            if position4:
+                print("Manifesto nao localizado.")
+                nao_encontrado = True
+                caminho_do_arquivo = 'BASE_KM.xlsx'
+                nome_da_aba = 'Planilha1'
+                wb = load_workbook(caminho_do_arquivo)
+                ws = wb[nome_da_aba]
+                coluna_ost = 'E'  
+                if linha > ws.max_row:
+                    ws[coluna_ost + str(linha_especifica)] = 'NAO LOCALIZADO'
+                else:
+                    ws[coluna_ost + str(linha_especifica)] = 'NAO LOCALIZADO'
+                wb.save(caminho_do_arquivo)
+                wb.close()
+                return aviso_ativo,nao_encontrado
+                break
+        except Exception as e:
+            print("Imagem não encontrada na tela. Aguardando...")
         try:
             print("Tentando achar a segunda imagem.")
             position2 = pyautogui.locateOnScreen(image_path2, confidence=confidence)
@@ -433,7 +456,7 @@ def status_manifesto(image_path,image_path3, confidence=0.9):
                 pyautogui.sleep(1)
                 pyautogui.press("tab")
                 status_manifesto('status_cadastrado.png','status_emitido.png')
-                return aviso_ativo
+                return aviso_ativo,nao_encontrado
                 break
         except Exception as e:
             print("Imagem não encontrada na tela. Aguardando...")
@@ -537,8 +560,10 @@ for i, linha in enumerate(Planilha_km.index):
     pyautogui.press("tab")
     for i in range(2):
         pyautogui.press("enter")
-    aviso_ativo = status_manifesto('status_cadastrado.png','status_emitido.png')
+    aviso_ativo,nao_encontrado = status_manifesto('status_cadastrado.png','status_emitido.png','campo_numero_manifesto.png')
     pyautogui.sleep(1)
+    if nao_encontrado:
+        continue
     for i in range(2):
         pyautogui.press("enter")
     click_info_manifesto('campo_km.png')
