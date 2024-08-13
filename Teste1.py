@@ -16,7 +16,7 @@ caminho_sistema = caminho.replace("C", "T", 1)
 def click_image(image_path, confidence=0.9):
     current_dir = os.path.dirname(__file__)  # Diretório atual do script
     caminho_imagem = caminho + r'\IMAGENS'
-    image_path = os.path.join(current_dir, caminho_imagem, image_path) 
+    image_path = os.path.join(current_dir, caminho_imagem, image_path)
     while True:
         try:
             position = pyautogui.locateOnScreen(image_path, confidence=confidence)
@@ -28,6 +28,14 @@ def click_image(image_path, confidence=0.9):
                 break
         except Exception as e:
             print("Imagem não encontrada na tela. Aguardando...")
+        image_path2 = os.path.join(current_dir, caminho_imagem, "query_timeout_expered.png") 
+        try:
+            position2 = pyautogui.locateOnScreen(image_path2, confidence=confidence)
+            if position2:
+                print("Imagem de query_timeout_expered foi encontrada na tela.")
+                click_image('ok.png')
+        except Exception as e:
+            print("Aguardando...")
         pyautogui.sleep(1)
 
 def campo_data_baixa(image_path,image_path2, confidence=0.9):
@@ -213,6 +221,14 @@ def novo_lançamento(image_path, confidence=0.9):
                 break
         except Exception as e:
             print("Imagem não encontrada na tela. Aguardando...")
+        image_path2 = os.path.join(current_dir, caminho_imagem, "query_timeout_expered.png") 
+        try:
+            position2 = pyautogui.locateOnScreen(image_path2, confidence=confidence)
+            if position2:
+                print("Imagem de query_timeout_expered foi encontrada na tela.")
+                click_image('ok.png')
+        except Exception as e:
+            print("Aguardando...")
         pyautogui.sleep(1)
 
 def click_info_manifesto(image_path, confidence=0.9):
@@ -232,6 +248,14 @@ def click_info_manifesto(image_path, confidence=0.9):
                 break
         except Exception as e:
             print("Imagem não encontrada na tela. Aguardando...")
+        image_path2 = os.path.join(current_dir, caminho_imagem, "query_timeout_expered.png") 
+        try:
+            position2 = pyautogui.locateOnScreen(image_path2, confidence=confidence)
+            if position2:
+                print("Imagem de query_timeout_expered foi encontrada na tela.")
+                click_image('ok.png')
+        except Exception as e:
+            print("Aguardando...")
         pyautogui.sleep(1)
 
 
@@ -409,6 +433,7 @@ def status_manifesto(image_path,image_path3,image_path4, confidence=0.9):
                 pyautogui.press("backspace")
                 pyautogui.write(str(filial))
                 pyautogui.sleep(1)
+                pyautogui.press("tab")
                 click_info_manifesto('serie_cancelamento.png')
                 pyautogui.press("backspace")
                 pyautogui.write(str(serie))
@@ -470,37 +495,6 @@ def alt_press(key):
     pyautogui.keyDown('alt')
     pyautogui.press(key)
     pyautogui.keyUp('alt')
-
-
-
-# # #LOGIN
-# if check_caps_lock():
-#     pyautogui.press("capslock")  # Desativa o CAPS LOCK se estiver ativado
-# pyautogui.keyDown('win')
-# pyautogui.press("m")
-# pyautogui.keyUp('win')
-# #click_image('logo_rodopar_areatrabalho.png')#PC ESCRITORIO
-# click_image('logo_rodopar_areatrabalho_resumido.png')#PC ESCRITORIO
-# #click_image('logo_rodopar_areatrabalho.png')#PC CASA
-# pyautogui.click()
-# click_image('conectar_rodopar.png')
-# #click_image('conectar_rodopar1.png')
-# click_image('senha_rodopar_1.png')
-# #click_image('senha_rodopar_2.png')
-# pyautogui.write("17@mudar")
-# click_image('ok_primeiro_login.png')
-# #click_image('ok_primeiro_login2.png')
-# click_image('sim_primeiro_login.png')
-# #click_image('sim_primeiro_login2.png')
-# click_image('segundo_login.png')    
-# pyautogui.sleep(1)
-# pyautogui.write("anascimento")
-# pyautogui.press("tab")
-# pyautogui.write("990607")
-# for i in range(2): 
-#     pyautogui.press("enter")
-# click_image('filial_1.png')
-# pyautogui.press("enter")
 
 click_image('botao_frota.png')
 pyautogui.press("alt")
