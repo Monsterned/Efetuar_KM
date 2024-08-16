@@ -6,7 +6,6 @@ import pyautogui
 import ctypes
 from datetime import datetime
 import pyautogui
-from selenium.webdriver.common.action_chains import ActionChains
 import shutil
 from datetime import datetime, timedelta
 
